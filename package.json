@@ -1,0 +1,32 @@
+{
+  "name": "skatepark",
+  "version": "1.0.0",
+  "description": "Proyect SkatePark Form",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Natcho2020/Prueba_SkatePark.git"
+  },
+  "keywords": [
+    "Express",
+    "Handlebars",
+    "NodeJS",
+    "PostgreSQL"
+  ],
+  "author": "Ignacio Morales",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Natcho2020/Prueba_SkatePark/issues"
+  },
+  "homepage": "https://github.com/Natcho2020/Prueba_SkatePark#readme",
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.2",
+    "pg": "^8.12.0"
+  }
+}
