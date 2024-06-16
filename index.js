@@ -1,9 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 var handlebars = require('express-handlebars');
-
-
-
+const cors = require('cors')
 const app = express()
 
 app.listen(3000, () => {
@@ -14,6 +12,7 @@ const { insertar } = require('./modules/usuarios.js')
 var bodyParser = require('body-parser');
 const { default: test } = require('node:test');
 
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -37,25 +36,17 @@ app.get("/login", (req, res) => {
 app.get("/admin", (req, res) => {
     res.render("admin")
 })
-app.get("/datos", (req, res) => {
-    res.render("datos")
-})
 app.get("/Registro", (req, res) => {
     res.render("Registro"), {
-        payload: req.body
+        test: req.body
     }
 })
 app.post("/Registro", async (req, res) => {
     res.render("Registro"), {
-        payload: req.body
+        test: req.body
     }
-    try {
-        console.log(JSON.stringify(req.body[0]))
-
-    } catch (error) {
-        // Definimos código de estado
-        res.statusCode = 500
-        res.json({ error: 'Algo salió mal, intentalo más tarde' })
-    }
+    const payload = req.body
+    const response = await insertar(payload)
+    res.send(response.rows)
 })
 
