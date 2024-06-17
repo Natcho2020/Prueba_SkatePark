@@ -1,0 +1,67 @@
+<table class="table bg-dark" data-bs-theme="dark">
+    <div class="container-lg">
+        <tbody class="usuarios">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Foto</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Años de experiencia</th>
+                    <th scope="col">Especialidad</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Aprobar Solicitud</th>
+                </tr>
+            </thead>
+        </tbody>
+</table>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script>
+
+    const getUsuarios = async () => {
+
+        const response = await fetch("http://localhost:3000/usuarios");
+        const data = await response.json();
+        console.log(data)
+        const estado = data.estado
+
+        $(".usuarios").html("");
+        $.each(data, (i, c) => {
+            let estado = data[0].estado
+            let estadoRev = revision(estado);
+
+
+
+            function revision() {
+                if (estado != true) {
+                    return `<td class="text-warning font-weight-bold">En revisión</td>`
+                } else {
+                    return `<td class="text-success font-weight-bold" >Aprobado</td>`
+                }
+            }
+            $(".usuarios").append(
+                `<tr>
+                <td>${c.id}</td>
+                <td>${c.foto}</td>
+                <td>${c.nombre}</td>
+                <td>${c.anos_experiencia}</td>
+                <td>${c.especialidad}</td> 
+                ${estadoRev}
+                 <td> <button onclick="${myFunction}(${c.id})">Click me</button></td> 
+                </tr>`
+            )
+
+            function myFunction() {
+                console.log(c.id)
+            }
+        })
+
+    }
+
+    getUsuarios();
+    ;
+</script>

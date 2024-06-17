@@ -11,13 +11,23 @@ const config = {
 const pool = new Pool(config);
 
 // Usuarios
-const insertar = async (payload) => {
+const insertar = async (payload, rutaFoto) => {
     /*Agregar Posts */
     const text = 'INSERT INTO skaters (email, nombre ,password,anos_experiencia,especialidad,foto,estado ) VALUES ($1, $2,$3,$4,$5,$6,$7) RETURNING *'
-    const values = [payload.email, payload.nombre, payload.password, payload.anos_experiencia, payload.especialidad, 2, false]
+    const values = [payload.email, payload.nombre, payload.password, payload.anos_experiencia, payload.especialidad, rutaFoto, false]
 
 
     const result = await pool.query(text, values)
     return result
 }
-module.exports = { insertar }
+const consultar = async () => {
+
+    const text = "SELECT * FROM skaters";
+
+
+    const result = await pool.query(text)
+    return result
+
+}
+
+module.exports = { insertar, consultar }
