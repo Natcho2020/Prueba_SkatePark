@@ -26,18 +26,17 @@
 
         const response = await fetch("http://localhost:3000/usuarios");
         const data = await response.json();
-        console.log(data)
-        const estado = data.estado
 
         $(".usuarios").html("");
         $.each(data, (i, c) => {
-            let estado = data[0].estado
+            let estado = data[i].estado
+
+            console.log(estado)
             let estadoRev = revision(estado);
-
-
-
+            let id = c.id
             function revision() {
-                if (estado != true) {
+                console.log(estado)
+                if (estado == false) {
                     return `<td class="text-warning font-weight-bold">En revisión</td>`
                 } else {
                     return `<td class="text-success font-weight-bold" >Aprobado</td>`
@@ -45,23 +44,46 @@
             }
             $(".usuarios").append(
                 `<tr>
-                <td>${c.id}</td>
+                <td>${id}</td>
                 <td>${c.foto}</td>
                 <td>${c.nombre}</td>
                 <td>${c.anos_experiencia}</td>
                 <td>${c.especialidad}</td> 
                 ${estadoRev}
-                 <td> <button onclick="${myFunction}(${c.id})">Click me</button></td> 
+                <td> <button id="btn-${id}" /name='${id}'>Click me</button></td> 
                 </tr>`
             )
 
-            function myFunction() {
-                console.log(c.id)
-            }
-        })
+            $(document).ready(function () {
+                $(`#btn-${c.id}`).click(function (event) {
+                    event.preventDefault();
+                    async function cambioEstado() {
+                        try {
+                            const response = await fetch('/admin', {
+                                method: 'PUT',
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    id: id,
 
+                                })
+                            });
+                            console.log(id)
+                            console.log('Completed!', response);
+                        } catch (err) {
+                            console.error(`Error: ${err}`);
+                        }
+
+                    }
+                    cambioEstado()
+                    window.location.reload()
+                });
+
+            })
+        })
     }
 
     getUsuarios();
-    ;
+
 </script>
