@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { insertar, consultar, updateStatus } from "../models/usuarios.js";
+import { insertar, consultar, consultarSkater, updateStatus, deleteData } from "../models/usuarios.js";
 import { fileURLToPath } from 'url';
+import jwt from 'jsonwebtoken'
 import path from 'node:path'
 
 const router = Router()
@@ -16,6 +17,9 @@ router.get("/admin", (req, res) => {
 })
 router.get("/Registro", (req, res) => {
     res.render("Registro")
+})
+router.get("/Datos", (req, res) => {
+    res.render("Datos")
 })
 
 router.post("/Registro", async (req, res) => {
@@ -57,7 +61,17 @@ router.put("/admin", async (req, res) => {
         res.json({ error: "Algo salió mal" })
     }
 })
-
+router.delete("/Datos", async (req, res) => {
+    const payload = req.query;
+    try {
+        const result = await deleteData(payload)
+        res.statusCode = 202
+        res.json({ message: "Usuario Eliminado" })
+    } catch (error) {
+        res.statusCode = 500
+        res.json({ error: "algo salió mal, intentalo más tarde" })
+    }
+})
 
 
 export { router }
