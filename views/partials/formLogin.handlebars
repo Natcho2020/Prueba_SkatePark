@@ -1,0 +1,66 @@
+<h1>Skate Park</h1>
+
+<div class="py-5">
+    <h2>Iniciar Sesión</h2>
+    <hr class="w-50" />
+
+    <form id='login' enctype="multipart/form-data">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control w-50 m-auto" />
+</div>
+<div class="form-group">
+    <label>Password</label>
+    <input type="password" name="password" class="form-control w-50 m-auto" />
+</div>
+<button class="btn btn-success mb-3" type="submit">Ingresar</button>
+<p>¿Aún no tienes cuenta? <a href="/Registro">Regístrate</a></p>
+</form>
+</div>
+
+<script>
+    document.getElementById("login").addEventListener("submit", async (event) => {
+        event.preventDefault()
+        const { password, email } = event.target
+        const valorEmail = email.value
+        const valorPassword = password.value
+
+        const getUsuarios = async () => {
+            const response1 = await fetch("http://localhost:3000/usuarios");
+            const datos = await response1.json();
+            const userFind = datos.find(e => e.email == valorEmail)
+            if (userFind.email != valorEmail) {
+                alert("Usuario Incorrecto")
+                return
+            } else if (userFind.password != valorPassword) {
+                alert('Password son distintos')
+                return
+            }
+        }
+        getUsuarios();
+
+        const getSkater = async () => {
+            try {
+                const formData = new FormData(event.target)
+
+                const response = await fetch("/login", {
+                    method: "POST",
+                    body: formData
+                })
+                console.log(formData)
+
+                const data = await response.json()
+                console.log(data)
+
+                sessionStorage.setItem('token', data.token)
+
+                window.location = `/datos?token=${sessionStorage.getItem('token')}`
+
+            } catch (error) {
+                alert("Problemas al crear registro, instentalo de nuevo")
+                console.error(error)
+            }
+        }
+        getSkater();
+    });
+
+</script>

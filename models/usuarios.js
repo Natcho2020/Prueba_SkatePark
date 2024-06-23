@@ -24,9 +24,9 @@ const consultar = async () => {
     return result
 }
 const consultarSkater = async (data) => {
-    const { email } = data
-    const text = 'Select from skaters where email = $1';
-    const values = [email]
+
+    const text = 'Select * from skaters where email = $1';
+    const values = [data.email]
     const result = await pool.query(text, values)
 
     return result
@@ -38,19 +38,27 @@ const updateStatus = async (id) => {
     const result = await pool.query(text, values)
     return result
 }
-const updateData = async (payload) => {
-    const text = "UPDATE skaters SET nombre = $1, password = $2, anos_experiencia = $3, especialidad = $4, estado = $5 WHERE email = $6 RETURNING *"
-    const values = [payload.nombre, payload.password, payload.anos_experiencia, payload.especialidad, payload.estado, payload.email]
-    const result = await pool.query(text, values)
-    return result
-}
-const deleteData = async (payload) => {
+
+const deleteSkater = async (data) => {
+    const { email } = data
+
     const text = 'DELETE FROM skaters WHERE email = $1'
-    const values = [payload.email]
+    const values = [email]
+
     const result = await pool.query(text, values)
+
+    return result
+}
+const updateSkater = async (data) => {
+    const { email, nombre, password, anos_experiencia, especialidad, estado } = data
+
+    const text = "UPDATE skaters SET nombre = $1, password = $2, anos_experiencia = $3, especialidad = $4, estado = $5 WHERE email = $6 RETURNING *"
+    const values = [nombre, password, anos_experiencia, especialidad, estado, email]
+
+    const result = await pool.query(text, values)
+
     return result
 }
 
 
-
-export { insertar, consultar, consultarSkater, updateStatus, deleteData }
+export { insertar, consultar, consultarSkater, updateStatus, deleteSkater, updateSkater }

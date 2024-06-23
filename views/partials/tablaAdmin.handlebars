@@ -31,11 +31,11 @@
         $.each(data, (i, c) => {
             let estado = data[i].estado
 
-            console.log(estado)
+
             let estadoRev = revision(estado);
             let id = c.id
             function revision() {
-                console.log(estado)
+
                 if (estado == false) {
                     return `<td class="text-warning font-weight-bold">En revisión</td>`
                 } else {
@@ -45,12 +45,12 @@
             $(".usuarios").append(
                 `<tr>
                 <td>${id}</td>
-                <td>${c.foto}</td>
+                <td><img src='/photos/${c.foto}' width="50px"></td>
                 <td>${c.nombre}</td>
                 <td>${c.anos_experiencia}</td>
                 <td>${c.especialidad}</td> 
                 ${estadoRev}
-                <td> <button id="btn-${id}" /name='${id}'>Click me</button></td> 
+                <td> <button type="button" class="btn btn-success" id="btn-${id}" /name='${id}'>Aprobar</button></td> 
                 </tr>`
             )
 
