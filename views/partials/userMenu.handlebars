@@ -1,92 +1,124 @@
-<form id="update">
-    <div class="form-group row w-50 m-auto">
-        <div class="form-group col-12 col-sm-6">
-            <label>Email</label>
-            <input class="form-control m-auto" disabled name="email" value="{{skater.email}}" />
+<div>
+    <form id="datos">
+        <div class="form-group row w-50 m-auto">
+            <div class="form-group col-12 col-sm-6">
+                <label>Email</label>
+                <input class="form-control m-auto" disabled name="email" id='email' value="{{skater.email}}" />
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label>Nombre</label>
+                <input type="text" name="nombre" class="form-control m-auto" value="{{skater.nombre}}" />
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control m-auto" value="" required/ />
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label>Repita la password</label>
+                <input type="password" name="password2" class="form-control m-auto" value="" />
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label>Años de experiencia</label>
+                <input type="number" name="anos_experiencia" class="form-control m-auto"
+                    value="{{skater.anos_experiencia}}" />
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label>Especialidad</label>
+                <input type="text" name="especialidad" class="form-control m-auto" value="{{skater.especialidad}}" />
+            </div>
         </div>
-        <div class="form-group col-12 col-sm-6">
-            <label>Nombre</label>
-            <input type="text" name="nombre" class="form-control m-auto" value="{{skater.nombre}}" />
+        <div class="mb-1">
+            <button type="submit" name="actualizar" id='actualizar' class="btn btn-primary">Actualizar</button>
         </div>
-        <div class="form-group col-12 col-sm-6">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control m-auto" value="" />
+        <div>
+            <button type="submit" name="eliminar" id='delete' class="btn btn-danger">Eliminar cuenta</button>
         </div>
-        <div class="form-group col-12 col-sm-6">
-            <label>Repita la password</label>
-            <input type="password" name="password2" class="form-control m-auto" value="" />
-        </div>
-        <div class="form-group col-12 col-sm-6">
-            <label>Años de experiencia</label>
-            <input type="number" name="anos_experiencia" class="form-control m-auto"
-                value="{{skater.anos_experiencia}}" />
-        </div>
-        <div class="form-group col-12 col-sm-6">
-            <label>Especialidad</label>
-            <input type="text" name="especialidad" class="form-control m-auto" value="{{skater.especialidad}}" />
-        </div>
-    </div>
-    <div class="mb-1">
-        <button type="submit" name="actualizar" class="btn btn-primary">Actualizar</button>
-    </div>
-    <div>
-        <button type="submit" name="eliminar" class="btn btn-danger">Eliminar cuenta</button>
-    </div>
-</form>
+    </form>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
 <script>
-    // window.location = "/ruta"
-    // Obtenemos data de formulario para actualizar Skater usando API de Skaters
-    document.getElementById("update").addEventListener("submit", async (event) => {
-        event.preventDefault()
-        // analizamos desde qué botón se activó el formulario
-        const action = event.submitter.name
-        if (action == 'actualizar') {
-            const { password, password2 } = event.target
+    skaterEmail = "{{skater.email}}"
+    console.log(skaterEmail)
+    const getUsuarios = async () => {
+        const response = await fetch("http://localhost:3000/usuarios");
+        const data = await response.json();
 
-            if (password.value != password2.value) {
-                alert('Password son distintos')
-                return
-            }
+        const idFind = data.find(e => e.email == skaterEmail)
+        const id = idFind.id
+        console.log(id)
 
-            try {
-                const formData = new FormData(event.target)
-                formData.append("email", event.target.email.value)
+        document.getElementById("delete").addEventListener("click", async (event) => {
+            event.preventDefault();
 
-                const response = await fetch("/skaters", {
-                    method: "PUT",
-                    body: formData
-                })
+            async function deleteUsuarios() {
+                try {
+                    const response = await fetch('/datos', {
+                        method: 'DELETE',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id: id,
 
-                const data = await response.json()
-                if (response.status == 500) {
-                    throw new Error("Error de servidor")
+                        })
+                    })
+                    console.log(id)
+                    console.log('Completed!', response);
+                } catch (err) {
+                    console.error(`Error: ${err}`);
                 }
-
-                if (response.status == 200) {
-                    alert(`Usuario ${data.skater[0].email} actualizado con éxito`)
-                    window.location = "/"
-                }
-
-            } catch (error) {
-                alert('Error actualizando usuario')
-                console.error("Network error", error)
             }
-        } else {
-            const email = event.target.email.value
-
-            const response = await fetch(`/skaters?email=${email}`, {
-                method: "DELETE",
-            })
-
-            const data = response.json()
-
-            if (response.status == 500) {
-                alert("Error de servidor, inténtalo más tarde")
-            } else {
-                alert("Usuario eliminado con éxito")
-                window.location = "/"
-            }
+            deleteUsuarios();
+            alert("Usuario Eliminado Exitosamente")
+            window.location = "http://localhost:3000/"
         }
-    })
+
+        )
+        document.getElementById("datos").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const { nombre, password, anos_experiencia, especialidad } = event.target
+            const newNombre = nombre.value
+            const newPassword = password.value
+            const newAnos_experiencia = anos_experiencia.value
+            const newEspecialidad = especialidad.value
+
+            console.log(newNombre, newAnos_experiencia, newEspecialidad, newPassword)
+
+            async function cambioEstado() {
+                try {
+                    const response = await fetch('/datos', {
+                        method: 'PUT',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id: id,
+                            nombre: newNombre,
+                            password: newPassword,
+                            anos_experiencia: newAnos_experiencia,
+                            especialidad: newEspecialidad,
+                        })
+                    })
+                    console.log('Completed!', response);
+                } catch (err) {
+                    console.error(`Error: ${err}`);
+                }
+            }
+            cambioEstado()
+            alert("Usuario Modificado Exitosamente")
+            window.location = "http://localhost:3000/"
+        });
+    }
+    getUsuarios();
+
+
+
+
+
+
+</script>

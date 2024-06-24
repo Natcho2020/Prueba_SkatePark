@@ -8,6 +8,6 @@ export const Authorization = async (req, res, next) => {
         next()//pasar a la ruta correspondiente
     }
     catch (error) {
-        res.status(401).render("index")
+        res.status(401).render("datos")
     }
 }

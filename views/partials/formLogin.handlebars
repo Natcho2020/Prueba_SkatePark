@@ -12,9 +12,10 @@
     <label>Password</label>
     <input type="password" name="password" class="form-control w-50 m-auto" />
 </div>
-<button class="btn btn-success mb-3" type="submit">Ingresar</button>
-<p>¿Aún no tienes cuenta? <a href="/Registro">Regístrate</a></p>
-</form>
+<div>
+    <button class="btn btn-success mb-3" type="submit">Ingresar</button>
+    <p>¿Aún no tienes cuenta? <a href="/Registro">Regístrate</a></p>
+    </form>
 </div>
 
 <script>
@@ -32,35 +33,38 @@
                 alert("Usuario Incorrecto")
                 return
             } else if (userFind.password != valorPassword) {
-                alert('Password son distintos')
+                alert('Error de Contraseña')
                 return
             }
+            const getSkater = async () => {
+                try {
+                    const formData = new FormData(event.target)
+
+                    const response = await fetch("/login", {
+                        method: "POST",
+                        body: formData
+                    })
+                    console.log(formData)
+
+                    const data = await response.json()
+                    console.log(data)
+
+                    alert(`Bienvenid@ ${userFind.nombre}`)
+                    sessionStorage.setItem('token', data.token)
+
+                    window.location = `/datos?token=${sessionStorage.getItem('token')}`
+
+                } catch (error) {
+                    alert("Error en el Servidor")
+                    console.error(error)
+                }
+            }
+            getSkater();
         }
         getUsuarios();
 
-        const getSkater = async () => {
-            try {
-                const formData = new FormData(event.target)
 
-                const response = await fetch("/login", {
-                    method: "POST",
-                    body: formData
-                })
-                console.log(formData)
 
-                const data = await response.json()
-                console.log(data)
-
-                sessionStorage.setItem('token', data.token)
-
-                window.location = `/datos?token=${sessionStorage.getItem('token')}`
-
-            } catch (error) {
-                alert("Problemas al crear registro, instentalo de nuevo")
-                console.error(error)
-            }
-        }
-        getSkater();
     });
 
 </script>

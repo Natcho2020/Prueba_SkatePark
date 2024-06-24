@@ -22,34 +22,35 @@
 
         const response = await fetch("http://localhost:3000/usuarios");
         const data = await response.json();
-        console.log(data)
-        const estado = data.estado
-
         $(".usuarios").html("");
         $.each(data, (i, c) => {
-            let estado = data[0].estado
+            let estado = data[i].estado
             let estadoRev = revision(estado);
+            console.log(estado)
+            let id = c.id
             function revision() {
-                if (estado != true) {
+
+                if (estado == false) {
                     return `<td class="text-warning font-weight-bold">En revisión</td>`
                 } else {
-                    return `<td class="text-success font-weight-bold">Aprobado</td>`
+                    return `<td class="text-success font-weight-bold" >Aprobado</td>`
                 }
             }
             $(".usuarios").append(
                 `<tr>
-                <td>${c.id}</td>
-             <td><img src='/photos/${c.foto}' width="50px"></td>
+                <td>${id}</td>
+                <td><img src='/photos/${c.foto}' width="50px"></td>
                 <td>${c.nombre}</td>
                 <td>${c.anos_experiencia}</td>
-                <td>${c.especialidad}</td>
+                <td>${c.especialidad}</td> 
                 ${estadoRev}
                 </tr>`
             )
+            revision();
         })
     }
     getUsuarios();
-    ;
+
 
 
 </script>

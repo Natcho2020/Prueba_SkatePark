@@ -30,9 +30,8 @@
         $(".usuarios").html("");
         $.each(data, (i, c) => {
             let estado = data[i].estado
-
-
             let estadoRev = revision(estado);
+            console.log(estado)
             let id = c.id
             function revision() {
 
@@ -53,6 +52,7 @@
                 <td> <button type="button" class="btn btn-success" id="btn-${id}" /name='${id}'>Aprobar</button></td> 
                 </tr>`
             )
+            revision();
 
             $(document).ready(function () {
                 $(`#btn-${c.id}`).click(function (event) {

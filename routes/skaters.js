@@ -46,21 +46,7 @@ router.put("/admin", async (req, res) => {
         res.json({ error: "Algo salió mal" })
     }
 })
-router.delete("/", async (req, res) => {
-    try {
-        const data = req.query
-        const result = await deleteStaker(data)
 
-        res.json({
-            message: `Deleted user with mail ${data.email}`
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: 'Internal Server Error'
-        })
-        console.error(error)
-    }
-})
 router.post("/login", async (req, res) => {
     try {
         // revisa si usuario existe
@@ -87,21 +73,29 @@ router.post("/login", async (req, res) => {
         console.error(error)
     }
 })
-router.put("/", async (req, res) => {
+router.put("/datos", async (req, res) => {
     try {
-        const data = req.body
-        // Analiza si estado viene vacío y lo define falso
-        if (!data.estado) {
-            data.estado = false
-        }
-
-        const result = await updateSkater(data)
+        const id = req.body.id
+        const payload = req.body
+        const result = await updateSkater(payload, id)
 
         console.log("RESULT", result)
         res.json({
             message: 'Updated skater',
             skater: result.rows
         })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal Server Error'
+        })
+        console.error(error)
+    }
+})
+router.delete("/datos", async (req, res) => {
+    try {
+        const id = req.body.id;
+        const result = await deleteSkater(id)
+        res.send("Eliminado Exitosamente")
     } catch (error) {
         res.status(500).json({
             message: 'Internal Server Error'

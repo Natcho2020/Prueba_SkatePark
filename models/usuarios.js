@@ -39,21 +39,17 @@ const updateStatus = async (id) => {
     return result
 }
 
-const deleteSkater = async (data) => {
-    const { email } = data
+const deleteSkater = async (id) => {
 
-    const text = 'DELETE FROM skaters WHERE email = $1'
-    const values = [email]
-
+    const text = 'DELETE FROM skaters WHERE id = $1'
+    const values = [id]
     const result = await pool.query(text, values)
-
     return result
 }
-const updateSkater = async (data) => {
-    const { email, nombre, password, anos_experiencia, especialidad, estado } = data
+const updateSkater = async (payload, id) => {
 
-    const text = "UPDATE skaters SET nombre = $1, password = $2, anos_experiencia = $3, especialidad = $4, estado = $5 WHERE email = $6 RETURNING *"
-    const values = [nombre, password, anos_experiencia, especialidad, estado, email]
+    const text = "UPDATE skaters SET nombre = $1, password = $2, anos_experiencia = $3, especialidad = $4 WHERE id = $5 RETURNING *"
+    const values = [payload.nombre, payload.password, payload.anos_experiencia, payload.especialidad, id]
 
     const result = await pool.query(text, values)
 
