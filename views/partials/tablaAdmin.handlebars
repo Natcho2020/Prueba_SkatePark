@@ -53,33 +53,70 @@
                 </tr>`
             )
             revision();
+            const getUsuarios = async () => {
 
-            $(document).ready(function () {
-                $(`#btn-${c.id}`).click(function (event) {
-                    event.preventDefault();
-                    async function cambioEstado() {
-                        try {
-                            const response = await fetch('/admin', {
-                                method: 'PUT',
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    id: id,
+                const response = await fetch("http://localhost:3000/usuarios");
+                const data = await response.json();
 
-                                })
-                            });
-                            console.log(id)
-                            console.log('Completed!', response);
-                        } catch (err) {
-                            console.error(`Error: ${err}`);
+                $(".usuarios").html("");
+                $.each(data, (i, c) => {
+                    let estado = data[i].estado
+                    let estadoRev = revision(estado);
+                    console.log(estado)
+                    let id = c.id
+                    function revision() {
+
+                        if (estado == false) {
+                            return `<td class="text-warning font-weight-bold">En revisión</td>`
+                        } else {
+                            return `<td class="text-success font-weight-bold" >Aprobado</td>`
                         }
                     }
-                    cambioEstado()
-                    window.location.reload()
-                });
+                    $(".usuarios").append(
+                        `<tr>
+                <td>${id}</td>
+                <td><img src='/photos/${c.foto}' width="50px"></td>
+                <td>${c.nombre}</td>
+                <td>${c.anos_experiencia}</td>
+                <td>${c.especialidad}</td> 
+                ${estadoRev}
+                <td> <button type="button" class="btn btn-success" id="btn-${id}" /name='${id}'>Aprobar</button></td> 
+                </tr>`
+                    )
+                    revision();
 
-            })
+                    $(document).ready(function () {
+                        $(`#btn-${c.id}`).click(function (event) {
+                            event.preventDefault();
+                            async function cambioEstado() {
+                                try {
+                                    const response = await fetch('/admin', {
+                                        method: 'PUT',
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            id: id,
+
+                                        })
+                                    });
+                                    console.log(id)
+                                    console.log('Completed!', response);
+                                } catch (err) {
+                                    console.error(`Error: ${err}`);
+                                }
+                            }
+                            cambioEstado()
+                            window.location.reload()
+                        });
+
+                    })
+                })
+            }
+
+            getUsuarios();
+
+
         })
     }
 

@@ -22,12 +22,13 @@
 
         const response = await fetch("http://localhost:3000/usuarios");
         const data = await response.json();
+        console.log(data)
         $(".usuarios").html("");
         $.each(data, (i, c) => {
+
             let estado = data[i].estado
-            let estadoRev = revision(estado);
-            console.log(estado)
             let id = c.id
+            let estadoRev = revision(estado);
             function revision() {
 
                 if (estado == false) {
@@ -44,11 +45,40 @@
                 <td>${c.anos_experiencia}</td>
                 <td>${c.especialidad}</td> 
                 ${estadoRev}
+                <td> <button type="button" class="btn btn-success" id="btn-${id}" /name='${id}'>Aprobar</button></td> 
                 </tr>`
             )
             revision();
+
+            $(document).ready(function () {
+                $(`#btn-${c.id}`).click(function (event) {
+                    event.preventDefault();
+                    async function cambioEstado() {
+                        try {
+                            const response = await fetch('/admin', {
+                                method: 'PUT',
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    id: id,
+
+                                })
+                            });
+                            console.log(id)
+                            console.log('Completed!', response);
+                        } catch (err) {
+                            console.error(`Error: ${err}`);
+                        }
+                    }
+                    cambioEstado()
+                    window.location.reload()
+                });
+
+            })
         })
     }
+
     getUsuarios();
 
 
